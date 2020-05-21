@@ -1,26 +1,34 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import { connect } from 'react-redux';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import { AppState } from './App.types';
+import { fetchMovies } from './redux/actions/Movies';
+
+interface appProps {
+    fetchMovies: any,
+    movies: any
+}
+const App = (props: appProps) => {
+    const { fetchMovies, movies } = props;
+
+    React.useEffect(() => {
+        if (movies.loading) {
+            fetchMovies();
+        }
+    }, [movies.loading, fetchMovies])
+
+    return (
+        <div className="App">
+            <header className="App-header">
+                <h1>Look at the console log! The store is changing!</h1>
+            </header>
+        </div>
+    );
 }
 
-export default App;
+const mapStateToProps = (state: AppState) => ({
+    movies: state.movies
+});
+
+export default connect(mapStateToProps, { fetchMovies })(App);
